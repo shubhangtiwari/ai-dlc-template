@@ -1,0 +1,41 @@
+# Persona model defaults — read by .ai/scripts/ai_init.sh at generation time.
+# Empty model or reasoning = do not emit that field for the IDE.
+# Use exact strings from each IDE's model picker if these differ in your account.
+
+# Cursor: composer-2.5 for all personas — other Cursor models billed at 2x for this org.
+
+[cursor.architect]
+model = "composer-2.5"
+
+[cursor.implementer]
+model = "composer-2.5"
+
+[cursor.reviewer]
+model = "composer-2.5"
+
+# Codex: gpt-5.5 available org-wide.
+
+[codex.architect]
+model = "gpt-5.5"
+reasoning = "high"
+
+[codex.implementer]
+model = "gpt-5.5"
+reasoning = "medium"
+
+[codex.reviewer]
+model = "gpt-5.5"
+reasoning = "high"
+
+# Claude Code subagents.
+
+[claude.architect]
+model = "claude-opus-4-6"
+
+[claude.implementer]
+model = "claude-sonnet-4-6"
+
+[claude.reviewer]
+model = "claude-sonnet-4-6"
+
+# copilot.* and windsurf.* intentionally absent — generator emits no model lines.

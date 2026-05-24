@@ -1,0 +1,4 @@
+# Tracks specs whose PRs or MRs are open but not merged.
+# Projects may maintain this manually or through CI automation.
+in-flight: []
+

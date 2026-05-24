@@ -1,0 +1,18 @@
+# Reference: append to .gitlab-ci.yml (adjust default branch and rules for your project)
+# Post-merge spec cleanup via make finalize-spec
+
+finalize-spec:
+  stage: test
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  variables:
+    CI: "true"
+  script:
+    # Set MERGED_BRANCH when your pipeline exposes the merged feature branch name.
+    - |
+      BRANCH="${MERGED_BRANCH:-}"
+      if [ -z "$BRANCH" ]; then
+        echo "skip: set MERGED_BRANCH to the merged feature branch for finalize-spec"
+        exit 0
+      fi
+      make finalize-spec ARGS="--branch ${BRANCH}"

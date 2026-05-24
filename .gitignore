@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.DS_Store
+
+# IDE projections from `make init <ide>` — edit `.ai/` only, then regenerate.
+AGENTS.md
+CLAUDE.md
+.windsurfrules
+.github/copilot-instructions.md
+.cursor/agents/
+.cursor/rules/
+.codex/agents/
+.claude/agents/
+.claude/skills/
+
