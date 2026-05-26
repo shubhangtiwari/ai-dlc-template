@@ -33,9 +33,11 @@ make init windsurf
 make init all
 ```
 
-This writes assistant-specific files such as `AGENTS.md`, `.codex/agents/*.toml`, `CLAUDE.md`, or
-`.cursor/rules/` (gitignored and not committed in this template). Regenerate after changing `.ai/`;
-do not edit generated IDE files by hand.
+This writes assistant-specific files such as `AGENTS.md`, `.codex/agents/*.toml`,
+`.agents/skills/*/SKILL.md`, `CLAUDE.md`, or `.cursor/rules/` (gitignored and not committed in
+this template). Cursor output includes an always-applied AI DLC discovery rule so Composer, Claude,
+Gemini, and other Cursor Agent models can find generated personas and skills. Regenerate after
+changing `.ai/`; do not edit generated IDE files by hand.
 
 Generated assistant files do not infer project, dependency, or toolchain facts. Forked projects
 should document those facts explicitly in their own architecture, blueprint, ADR, and spec files when

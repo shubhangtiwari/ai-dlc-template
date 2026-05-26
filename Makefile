@@ -1,7 +1,7 @@
 # ai-dlc-template Makefile
 #
 # Governance targets (template-managed):
-#   init           Generate IDE-specific entrypoints (CLAUDE.md, AGENTS.md, .codex/, .cursor/, ...)
+#   init           Generate IDE-specific entrypoints (CLAUDE.md, AGENTS.md, .agents/, .codex/, .cursor/, ...)
 #                  from .ai/ guidance. Re-run after editing anything under .ai/.
 #   update         Pull the latest .ai/ from the upstream template repo (overwrites local .ai/).
 #                  Use ARGS="--dry-run" to preview, "--ref REF" to pin a branch/tag.
@@ -38,7 +38,7 @@ help:
 
 # Generate per-IDE entrypoint files from .ai/ guidance.
 # Reads .ai/personas/, .ai/skills/, .ai/README.md (INIT block), and .ai/models.defaults.toml,
-# and writes IDE-native files (CLAUDE.md, AGENTS.md, .codex/agents/, .cursor/rules/, ...).
+# and writes IDE-native files (CLAUDE.md, AGENTS.md, .agents/skills/, .codex/agents/, .cursor/rules/, ...).
 # Generated files are gitignored and must not be hand-edited; re-run after changing .ai/.
 init:
 	@if [ -z "$(INIT_ARG)" ]; then \

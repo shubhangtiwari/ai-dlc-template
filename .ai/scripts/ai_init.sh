@@ -734,12 +734,34 @@ write_codex_agent() {
   announce_written "$path"
 }
 
+write_codex_skill() {
+  local index="$1"
+  local name="${SKILL_NAMES[$index]}"
+  local description="${SKILL_DESCRIPTIONS[$index]}"
+  local body="${SKILL_BODIES[$index]}"
+  local path="$REPO/.agents/skills/$name/SKILL.md"
+
+  ensure_parent_dir "$path"
+  {
+    printf -- '---\n'
+    printf 'name: %s\n' "$name"
+    printf 'description: %s\n' "$(json_string "$description")"
+    printf -- '---\n\n'
+    printf '%s\n' "$body"
+  } >"$path"
+  announce_written "$path"
+}
+
 gen_codex() {
   local path=""
   local i=0
 
   for ((i = 0; i < ${#PERSONA_NAMES[@]}; i++)); do
     write_codex_agent "$i"
+  done
+
+  for ((i = 0; i < ${#SKILL_NAMES[@]}; i++)); do
+    write_codex_skill "$i"
   done
 
   path="$REPO/AGENTS.md"
@@ -753,8 +775,9 @@ gen_codex() {
       printf '%s\n' "- \`${PERSONA_NAMES[$i]}\` — \`.codex/agents/${PERSONA_NAMES[$i]}.toml\`"
     done
     printf '\n## Skills\n\n'
+    printf 'Codex skills live under `.agents/skills/`.\n\n'
     for ((i = 0; i < ${#SKILL_NAMES[@]}; i++)); do
-      printf '%s\n' "- \`${SKILL_NAMES[$i]}\` — ${SKILL_DESCRIPTIONS[$i]}"
+      printf '%s\n' "- \`${SKILL_NAMES[$i]}\` — \`.agents/skills/${SKILL_NAMES[$i]}/SKILL.md\` — ${SKILL_DESCRIPTIONS[$i]}"
     done
     printf '\n## Persona Reference\n\n'
     for ((i = 0; i < ${#PERSONA_NAMES[@]}; i++)); do
@@ -917,6 +940,27 @@ gen_cursor() {
   write_cursor_mdc "$path" "Core architecture, spec gate, and main-agent delegation" true "" "$(<"${path}.body")"
   rm -f "${path}.body"
 
+  path="$REPO/.cursor/rules/00-ai-dlc-discovery.mdc"
+  ensure_parent_dir "$path"
+  {
+    printf '# AI DLC discovery\n\n'
+    printf 'This rule is always applied so every Cursor Agent model, including Gemini models, can discover the generated AI DLC personas and skills.\n\n'
+    printf '## Personas\n\n'
+    printf 'Native Cursor agent files live under `.cursor/agents/`. If native delegation is unavailable, apply the matching persona instructions from the corresponding `persona-*.mdc` rule before working.\n\n'
+    for ((i = 0; i < ${#PERSONA_NAMES[@]}; i++)); do
+      printf '%s\n' "- \`${PERSONA_NAMES[$i]}\` — \`.cursor/agents/${PERSONA_NAMES[$i]}.md\` and \`.cursor/rules/persona-${PERSONA_NAMES[$i]}.mdc\` — ${PERSONA_DESCRIPTIONS[$i]}"
+    done
+    printf '\n## Skills\n\n'
+    printf 'Skill rules live under `.cursor/rules/skill-*.mdc`. Before claiming a skill is unavailable, inspect the matching rule and follow it.\n\n'
+    for ((i = 0; i < ${#SKILL_NAMES[@]}; i++)); do
+      printf '%s\n' "- \`${SKILL_NAMES[$i]}\` — \`.cursor/rules/skill-${SKILL_NAMES[$i]}.mdc\` — ${SKILL_DESCRIPTIONS[$i]}"
+    done
+    printf '\n## Model compatibility\n\n'
+    printf 'Do not assume the selected model has native knowledge of Cursor custom agents or agent-requested rules. Use this index as the routing table for Composer, Claude, Gemini, and other Cursor Agent models.\n'
+  } >"${path}.body"
+  write_cursor_mdc "$path" "Always-applied AI DLC persona and skill discovery for all Cursor models, including Gemini" true "" "$(<"${path}.body")"
+  rm -f "${path}.body"
+
   write_cursor_mdc \
     "$REPO/.cursor/rules/governance-spec-gate.mdc" \
     "Spec gate when editing source, tests, or contract docs — delegate before patching" \
@@ -977,6 +1021,7 @@ EOF
     done
     printf '\n## Cursor rules\n\n'
     printf '%s\n' '- `core.mdc` — always applied (routing, spec gate, delegation)'
+    printf '%s\n' '- `00-ai-dlc-discovery.mdc` — always applied (persona and skill discovery for all Cursor models)'
     printf '%s\n' "- \`governance-spec-gate.mdc\` — globs: \`${globs}\`"
     for ((i = 0; i < ${#PERSONA_NAMES[@]}; i++)); do
       printf '%s\n' "- \`persona-${PERSONA_NAMES[$i]}.mdc\` — same globs as governance rule"

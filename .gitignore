@@ -15,7 +15,7 @@ CLAUDE.md
 .github/copilot-instructions.md
 .cursor/agents/
 .cursor/rules/
+.agents/skills/
 .codex/agents/
 .claude/agents/
 .claude/skills/
-
